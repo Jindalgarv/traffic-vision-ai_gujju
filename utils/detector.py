@@ -115,10 +115,8 @@ class LocalYOLODetector:
         if key not in self._models:
             try:
                 from ultralytics import YOLO
-            except ImportError as exc:
-                raise RuntimeError(
-                    "ultralytics is not installed. Run: pip install ultralytics"
-                ) from exc
+            except ImportError as e:
+                raise ImportError(f"Failed to import ultralytics. Original error: {e}\n(On Streamlit Cloud, you may need a packages.txt with libgl1 or similar system dependencies)") from e
 
             config = get_model_config(key)
             model_path = resolve_model_path(config)
