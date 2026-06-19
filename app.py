@@ -11,6 +11,23 @@ Two detection backends are available (sidebar toggle):
 
 from __future__ import annotations
 
+# ============================================================
+# STREAMLIT CLOUD FIX — must be the very first code that runs.
+# ultralytics installs opencv-python (GUI build) which crashes
+# on Streamlit Cloud because libgthread-2.0.so.0 / libGL.so.1
+# are missing. We proactively remove the GUI wheel here, before
+# any other code can import cv2 and lock the .so into memory.
+# ============================================================
+import subprocess as _sp
+import sys as _sys
+
+_sp.run([_sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python"], check=False, capture_output=True)
+
+# Now import cv2 from the headless wheel only
+import cv2  # noqa: E402  (headless wheel installed via requirements.txt)
+
+# ============================================================
+
 import json
 import logging
 import os
@@ -21,31 +38,6 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
-
-# --- Streamlit Cloud OpenCV Auto-Fix ---
-# ultralytics forces the installation of opencv-python which requires system-level
-# GLib and GL libraries. On Streamlit Cloud, installing these via packages.txt
-# currently fails due to mixed apt repositories (bullseye vs trixie).
-# This block catches the missing library error and forcefully replaces
-# opencv-python with opencv-python-headless at runtime.
-try:
-    import cv2
-except ImportError as e:
-    if "libgthread" in str(e) or "libGL" in str(e):
-        import streamlit as st
-        import subprocess
-        import sys
-        
-        print("Detected Streamlit Cloud OpenCV dependency error. Applying headless hotfix...")
-        # Ignore errors (check=False) to prevent CalledProcessError from crashing the app
-        subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python"], check=False)
-        subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python-headless"], check=False)
-        subprocess.run([sys.executable, "-m", "pip", "install", "opencv-python-headless>=4.8.0"], check=False)
-        
-        # Try importing again
-        import cv2
-    else:
-        raise
 
 import pandas as pd
 import streamlit as st

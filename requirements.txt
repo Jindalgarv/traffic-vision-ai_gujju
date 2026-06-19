@@ -4,22 +4,14 @@ pandas>=2.0.0
 numpy>=1.24.0
 requests>=2.31.0
 
-# --- OpenCV: headless only (no GUI, no libGL/libgthread required) ---
-# Install headless FIRST. Then install ultralytics with --no-deps to
-# prevent it from overriding with the GUI opencv-python wheel.
+# opencv-python (GUI build) is uninstalled at runtime by app.py before cv2 loads.
+# Only the headless build is used at runtime.
 opencv-python-headless>=4.8.0
 
-# ultralytics core — installed without its auto-pulled opencv-python dep
-# (we supply opencv-python-headless above instead)
-ultralytics>=8.0.0 --no-deps
-# ultralytics actual deps (minus opencv-python):
+# CPU-only torch
 torch>=2.0.0
 torchvision>=0.15.0
-matplotlib>=3.3.0
-scipy>=1.4.1
-pyyaml>=5.3.1
-tqdm>=4.42.1
-psutil>=5.8.0
+ultralytics>=8.0.0
 huggingface_hub>=0.20.0
 
 python-dotenv>=1.0.0
