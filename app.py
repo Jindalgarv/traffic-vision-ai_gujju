@@ -1042,7 +1042,7 @@ with review_tab:
                 st.markdown(f"**OCR Plate:** `{row.get('ocr_plate_number', 'N/A')}`")
 
                 # Evidence integrity
-                if row.get("image_hash"):
+                if row.get("image_hash") and isinstance(row.get("image_hash"), str):
                     st.markdown("**SHA-256 hash:**")
                     st.markdown(
                         f'<div class="hash-box">{row["image_hash"][:32]}…</div>',
