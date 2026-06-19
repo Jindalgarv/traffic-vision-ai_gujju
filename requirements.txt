@@ -6,11 +6,19 @@ numpy>=1.24.0
 requests>=2.31.0
 inference-sdk>=0.59.0
 
+# Local YOLO inference (no API key required)
+# Downloads yolov8n.pt from ultralytics CDN, helmet + LP models from HuggingFace Hub.
+ultralytics>=8.0.0
+huggingface_hub>=0.20.0
+
 python-dotenv>=1.0.0
-# OCR option 1. Recommended first because the app can call easyocr.Reader().readtext().
-# Install when you want real OCR instead of the mock fallback:
+
+# Gemini Vision API (Hybrid AI mode)
+google-genai>=1.0.0
+
+# OCR option 1 – recommended (real OCR instead of mock fallback):
 # easyocr>=1.7.2
 
-# OCR option 2. PaddleOCR may also require a matching paddlepaddle install for your OS/CPU/GPU.
+# OCR option 2 – PaddleOCR (may need matching paddlepaddle build):
 # paddleocr>=3.0.0
 # paddlepaddle>=3.0.0

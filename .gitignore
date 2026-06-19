@@ -21,3 +21,12 @@ evidence/*.png
 uploads/*
 scratch/test_traffic_violations.db
 scratch/test_evidence/*
+
+# Model weights (downloaded at runtime)
+*.pt
+
+# DB at project root (legacy location)
+traffic_violations.db
+
+# Test images
+test_car.jpg
