@@ -33,11 +33,16 @@ try:
 except ImportError as e:
     if "libgthread" in str(e) or "libGL" in str(e):
         import streamlit as st
+        import subprocess
+        import sys
         
         print("Detected Streamlit Cloud OpenCV dependency error. Applying headless hotfix...")
-        subprocess.check_call([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python", "opencv-python-headless"])
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python-headless>=4.8.0"])
-        # Now cv2 should import cleanly
+        # Ignore errors (check=False) to prevent CalledProcessError from crashing the app
+        subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python"], check=False)
+        subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python-headless"], check=False)
+        subprocess.run([sys.executable, "-m", "pip", "install", "opencv-python-headless>=4.8.0"], check=False)
+        
+        # Try importing again
         import cv2
     else:
         raise
