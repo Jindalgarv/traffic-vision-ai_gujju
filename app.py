@@ -12,12 +12,35 @@ Two detection backends are available (sidebar toggle):
 from __future__ import annotations
 
 import json
+import logging
 import os
+import subprocess
+import sys
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
+
+# --- Streamlit Cloud OpenCV Auto-Fix ---
+# ultralytics forces the installation of opencv-python which requires system-level
+# GLib and GL libraries. On Streamlit Cloud, installing these via packages.txt
+# currently fails due to mixed apt repositories (bullseye vs trixie).
+# This block catches the missing library error and forcefully replaces
+# opencv-python with opencv-python-headless at runtime.
+try:
+    import cv2
+except ImportError as e:
+    if "libgthread" in str(e) or "libGL" in str(e):
+        import streamlit as st
+        
+        print("Detected Streamlit Cloud OpenCV dependency error. Applying headless hotfix...")
+        subprocess.check_call([sys.executable, "-m", "pip", "uninstall", "-y", "opencv-python", "opencv-python-headless"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python-headless>=4.8.0"])
+        # Now cv2 should import cleanly
+        import cv2
+    else:
+        raise
 
 import pandas as pd
 import streamlit as st
