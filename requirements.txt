@@ -1,28 +1,28 @@
 streamlit>=1.35.0
 pillow>=10.0.0
 pandas>=2.0.0
-opencv-python-headless>=4.8.0
 numpy>=1.24.0
 requests>=2.31.0
 
-# Force CPU-only PyTorch for Streamlit Cloud to avoid 800MB+ CUDA downloads crashing the build
---extra-index-url https://download.pytorch.org/whl/cpu
+# --- OpenCV: headless only (no GUI, no libGL/libgthread required) ---
+# Install headless FIRST. Then install ultralytics with --no-deps to
+# prevent it from overriding with the GUI opencv-python wheel.
+opencv-python-headless>=4.8.0
+
+# ultralytics core — installed without its auto-pulled opencv-python dep
+# (we supply opencv-python-headless above instead)
+ultralytics>=8.0.0 --no-deps
+# ultralytics actual deps (minus opencv-python):
 torch>=2.0.0
 torchvision>=0.15.0
-
-# Local YOLO inference (no API key required)
-# Downloads yolov8n.pt from ultralytics CDN, helmet + LP models from HuggingFace Hub.
-ultralytics>=8.0.0
+matplotlib>=3.3.0
+scipy>=1.4.1
+pyyaml>=5.3.1
+tqdm>=4.42.1
+psutil>=5.8.0
 huggingface_hub>=0.20.0
 
 python-dotenv>=1.0.0
 
-# Gemini Vision API (Hybrid AI mode)
+# Gemini Vision API
 google-genai>=1.0.0
-
-# OCR option 1 – recommended (real OCR instead of mock fallback):
-# easyocr>=1.7.2
-
-# OCR option 2 – PaddleOCR (may need matching paddlepaddle build):
-# paddleocr>=3.0.0
-# paddlepaddle>=3.0.0

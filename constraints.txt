@@ -1,0 +1,4 @@
+# Force headless OpenCV everywhere — prevents ultralytics from pulling
+# the GUI opencv-python that requires libGL / libgthread system libs
+# which are unavailable on Streamlit Cloud.
+opencv-python==0
